@@ -61,13 +61,16 @@ if page == "新增上班紀錄":
     start_time = datetime.strptime(selected_start,"%H:%M").time()
     selected_end = st.selectbox("選擇下班時間", time_options, index=time_options.index("20:30"))
     end_time = datetime.strptime(selected_end,"%H:%M").time()
+    rest_minutes_options = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120]
+    rest_minutes = st.selectbox("選擇休息時間(分鐘)", rest_minutes_options)
+
 
     # 計算總工時
     dt_start = datetime.combine(work_date, start_time)
     dt_end = datetime.combine(work_date, end_time)
     if dt_end < dt_start:
         dt_end += timedelta(days=1)
-    duration = dt_end - dt_start
+    duration = dt_end - dt_start - timedelta(minutes=rest_minutes)  # 扣除休息時間
     total_hours = round(duration.total_seconds() / 3600, 2)
     overtime_hours = max(0, total_hours - 8)
 
