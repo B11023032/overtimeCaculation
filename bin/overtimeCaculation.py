@@ -183,10 +183,17 @@ elif page == "查看每月統計":
             for r in rows:
                 this_date = datetime.strptime(r[0], "%Y-%m-%d").date()
                 is_rest = date_rest_map.get(this_date, False)
-                rest_day_flags.append(is_rest)
+                rest_day_flags.append(is_rest)                
+
+                start_dt = datetime.strptime(r[1], "%H:%M")
+                end_dt = datetime.strptime(r[2], "%H:%M")
+                if end_dt <= start_dt:
+                    end_dt += timedelta(days=1)
+                duration = end_dt - start_dt - timedelta(minutes=r[5])
+                work_hours = round(duration.total_seconds()/3600, 2)
 
                 overtime = r[4]
-                pay = calculate_overtime_pay(hourly_rate, overtime, is_rest, r[2] - r[1] - r[5])
+                pay = calculate_overtime_pay(hourly_rate, overtime, is_rest, work_hours)
                 pay_list.append(pay)
                 total_overtime += overtime
                 total_pay += pay
