@@ -211,8 +211,8 @@ elif page == "編輯/刪除紀錄":
     c.execute('SELECT id, work_date, start_time, end_time FROM records ORDER BY work_date DESC')
     rows = c.fetchall()
     if rows:
-        options = [f"{r[1]} {r[2]}-{r[3]} (ID:{r[0]})" for r in rows]
-        selected_idx = st.selectbox("選擇要編輯或刪除的紀錄", range(len(options)), format_func=lambda i: options[i])
+        options = [f"{i+1}. {r[1]} {r[2]}-{r[3]}" for i, r in enumerate(rows)]
+        selected_idx = st.selectbox("選擇紀錄", range(len(options)), format_func=lambda i: options[i])
         selected_id = rows[selected_idx][0]
 
         action = st.radio("動作", ["編輯", "刪除"])
