@@ -65,7 +65,7 @@ if page == "新增上班紀錄":
     work_date = st.date_input("選擇上班日期", date.today())
     selected_start = st.selectbox("選擇上班時間", time_options, index=time_options.index("11:00"))
     start_time = datetime.strptime(selected_start,"%H:%M").time()
-    selected_end = st.selectbox("選擇下班時間", time_options, index=time_options.index("20:30"))
+    selected_end = st.selectbox("選擇下班時間", time_options, index=time_options.index("20:20"))
     end_time = datetime.strptime(selected_end,"%H:%M").time()
     rest_minutes_options = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120]
     rest_minutes = st.selectbox("選擇休息時間(分鐘)", rest_minutes_options, index=rest_minutes_options.index(80))
