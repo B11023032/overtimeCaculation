@@ -40,8 +40,19 @@ if page == "新增上班紀錄":
     st.title("新增上班紀錄")
 
     work_date = st.date_input("選擇上班日期", date.today())
-    start_time = st.time_input("上班時間", time(11,0))
-    end_time = st.time_input("下班時間", time(20,0))
+    #start_time = st.time_input("上班時間", time(11,0))
+    #end_time = st.time_input("下班時間", time(20,0))
+
+    time_options = []
+    for h in range(0,24):
+        for m in range(0,60,1):  # 改成1分鐘
+            time_options.append(f"{h:02d}:{m:02d}")
+
+    selected_start = st.selectbox("選擇上班時間 (1分鐘間隔)", time_options, index=time_options.index("11:00"))
+    start_time = datetime.strptime(selected_start,"%H:%M").time()
+    selected_end = st.selectbox("選擇下班時間 (1分鐘間隔)", time_options, index=time_options.index("20:00"))
+    end_time = datetime.strptime(selected_end,"%H:%M").time()
+
 
     # 計算總工時
     dt_start = datetime.combine(work_date, start_time)
