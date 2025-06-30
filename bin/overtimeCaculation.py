@@ -35,7 +35,7 @@ def calculate_overtime_pay(hourly_rate, overtime_hours, is_rest_day, work_time):
         if work_time <= 2:
             pay = 2 * work_time * 1.3333
         elif work_time <= 4:
-            pay = overtime_houwork_timers * hourly_rate * 1.3333
+            pay = work_time * hourly_rate * 1.3333
         elif work_time <= 8:
             pay = work_time * hourly_rate * 1.6666
         else:
