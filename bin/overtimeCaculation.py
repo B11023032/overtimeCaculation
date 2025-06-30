@@ -209,7 +209,7 @@ elif page == "查看每月統計":
 elif page == "編輯/刪除紀錄":
     st.title("編輯或刪除紀錄")
     c.execute('''
-        REATE TABLE records_temp (
+        CREATE TABLE records_temp (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             work_date TEXT,
             start_time TEXT,
