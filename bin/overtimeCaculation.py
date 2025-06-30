@@ -172,8 +172,8 @@ elif page == "查看每月統計":
             pay_list = []
 
             for i, r in enumerate(rows):
-                overtime = r[5]
-                is_rest = rest_day_flags[i]
+                overtime = r[4]
+                is_rest = rest_day_flags[i+1]
                 pay = calculate_overtime_pay(hourly_rate, overtime, is_rest)
                 pay_list.append(pay)
                 total_overtime += overtime
@@ -235,11 +235,13 @@ elif page == "編輯/刪除紀錄":
                 )
                 conn.commit()
                 st.toast("更新完成")
+                st.rerun()
         else:
             if st.button("刪除"):
                 c.execute("DELETE FROM records WHERE id=?", (selected_id,))
                 conn.commit()
                 st.toast("已刪除")
+                st.rerun()
     else:
         st.info("無任何紀錄")
 
