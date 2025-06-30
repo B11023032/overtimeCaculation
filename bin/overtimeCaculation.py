@@ -20,6 +20,11 @@ CREATE TABLE IF NOT EXISTS records (
 )
 ''')
 conn.commit()
+try:
+    c.execute("ALTER TABLE records ADD COLUMN rest_minutes INTEGER DEFAULT 0")
+except sqlite3.OperationalError:
+    # 欄位已存在就略過
+    pass
 
 # 加班費計算
 def calculate_overtime_pay(hourly_rate, overtime_hours, is_rest_day):
