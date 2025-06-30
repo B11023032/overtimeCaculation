@@ -106,8 +106,7 @@ elif page == "查看每月統計":
     selected_month = st.selectbox("選擇月份", month_options, index=month_options.index(date.today().month))
     base_salary_text = st.text_input("輸入底薪 (月薪)")
 
-    refresh = st.button("重新整理")
-    if refresh or st.button("查詢"):
+    if st.button("查詢"):
         try:
             base_salary = float(base_salary_text)
             hourly_rate = round(base_salary / (30 * 8), 2)
