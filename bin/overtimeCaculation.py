@@ -212,17 +212,34 @@ elif page == "編輯/刪除紀錄":
 
 
             if st.button("更新"):
-                c.execute("UPDATE records SET work_date=?, start_time=?, end_time=?, rest_minutes=?, overtime_hours=? WHERE id=?",
-                  (new_date.isoformat(), new_start, new_end, new_rest, new_end - new_start - timedelta(minutes=new_rest), selected_id))
+                # 把字串轉成 datetime
+                dt_start = datetime.combine(new_date, datetime.strptime(new_start, "%H:%M").time())
+                dt_end = datetime.combine(new_date, datetime.strptime(new_end, "%H:%M").time())
+                if dt_end < dt_start:
+                    dt_end += timedelta(days=1)
+                duration = dt_end - dt_start - timedelta(minutes=new_rest)
+                total_hours = round(duration.total_seconds() / 3600, 2)
+                overtime_hours = max(0, total_hours - 8)
+
+                c.execute(
+                    "UPDATE records SET work_date=?, start_time=?, end_time=?, rest_minutes=?, total_hours=?, overtime_hours=? WHERE id=?",
+                    (
+                        new_date.isoformat(),
+                        new_start,
+                        new_end,
+                        new_rest,
+                        total_hours,
+                        overtime_hours,
+                        selected_id
+                    )
+                )
                 conn.commit()
                 st.toast("更新完成")
-                st.rerun()
         else:
             if st.button("刪除"):
                 c.execute("DELETE FROM records WHERE id=?", (selected_id,))
                 conn.commit()
                 st.toast("已刪除")
-                st.rerun()
     else:
         st.info("無任何紀錄")
 
