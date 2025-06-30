@@ -208,6 +208,27 @@ elif page == "查看每月統計":
 # 3️⃣ 編輯/刪除紀錄
 elif page == "編輯/刪除紀錄":
     st.title("編輯或刪除紀錄")
+    c.execute('''
+        REATE TABLE records_temp (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            work_date TEXT,
+            start_time TEXT,
+            end_time TEXT,
+            rest_minutes INTEGER,
+            total_hours REAL,
+            overtime_hours REAL
+        )
+        ''')
+
+    c.execute('''
+        INSERT INTO records_temp (work_date, start_time, end_time, rest_minutes, total_hours, overtime_hours)
+        SELECT work_date, start_time, end_time, rest_minutes, total_hours, overtime_hours FROM records
+    ''')
+
+    c.execute('DROP TABLE records')
+    c.execute('ALTER TABLE records_temp RENAME TO records')
+    conn.commit()
+
     c.execute('SELECT id, work_date, start_time, end_time FROM records ORDER BY work_date DESC')
     rows = c.fetchall()
     if rows:
