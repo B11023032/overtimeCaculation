@@ -14,9 +14,9 @@ CREATE TABLE IF NOT EXISTS records (
     work_date TEXT,
     start_time TEXT,
     end_time TEXT,
-    rest_minutes INTEGER,
     total_hours REAL,
-    overtime_hours REAL
+    overtime_hours REAL,
+    rest_minutes INTEGER
 )
 ''')
 conn.commit()
@@ -221,8 +221,8 @@ elif page == "編輯/刪除紀錄":
     else:
         st.info("無任何紀錄")
 
-
-#git add .
-#git commit -m "Update overtime app"
-#git push origin main
-
+'''
+git add .
+git commit -m "Update overtime app"
+git push origin main
+'''
