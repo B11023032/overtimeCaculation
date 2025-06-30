@@ -163,7 +163,7 @@ elif page == "查看每月統計":
                     streak += 1
                 else:
                     streak = 1
-                is_rest = streak >=5
+                is_rest = streak >5
                 rest_day_flags.append(is_rest)
                 last_date = d
 
