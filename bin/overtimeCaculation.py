@@ -27,19 +27,19 @@ except sqlite3.OperationalError:
     pass
 
 # 加班費計算
-def calculate_overtime_pay(hourly_rate, overtime_hours, is_rest_day):
+def calculate_overtime_pay(hourly_rate, overtime_hours, is_rest_day, work_time):
     pay = 0
     if overtime_hours <= 0:
         return 0
     if is_rest_day:
-        if overtime_hours <= 2:
-            pay = 2 * hourly_rate * 1.3333
-        elif overtime_hours <= 4:
-            pay = overtime_hours * hourly_rate * 1.3333
-        elif overtime_hours <= 8:
-            pay = overtime_hours * hourly_rate * 1.6666
+        if work_time <= 2:
+            pay = 2 * work_time * 1.3333
+        elif work_time <= 4:
+            pay = overtime_houwork_timers * hourly_rate * 1.3333
+        elif work_time <= 8:
+            pay = work_time * hourly_rate * 1.6666
         else:
-            pay = 8 * hourly_rate * 1.6666 + (overtime_hours - 8) * hourly_rate * 2
+            pay = 8 * hourly_rate * 1.6666 + (work_time - 8) * hourly_rate * 2
     else:
         if overtime_hours <= 2:
             pay = overtime_hours * hourly_rate * 1.3333
@@ -186,7 +186,7 @@ elif page == "查看每月統計":
                 rest_day_flags.append(is_rest)
 
                 overtime = r[4]
-                pay = calculate_overtime_pay(hourly_rate, overtime, is_rest)
+                pay = calculate_overtime_pay(hourly_rate, overtime, is_rest, r[2] - r[1] - r[7])
                 pay_list.append(pay)
                 total_overtime += overtime
                 total_pay += pay
