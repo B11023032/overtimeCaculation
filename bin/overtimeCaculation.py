@@ -212,8 +212,8 @@ elif page == "編輯/刪除紀錄":
     rows = c.fetchall()
     if rows:
         options = [f"{r[1]} {r[2]}-{r[3]} (ID:{r[0]})" for r in rows]
-        selected = st.selectbox("選擇要編輯或刪除的紀錄", options)
-        selected_id = int(selected.split("ID:")[1][:-1])
+        selected_idx = st.selectbox("選擇要編輯或刪除的紀錄", range(len(options)), format_func=lambda i: options[i])
+        selected_id = rows[selected_idx][0]
 
         action = st.radio("動作", ["編輯", "刪除"])
         if action == "編輯":
