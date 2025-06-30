@@ -185,12 +185,17 @@ elif page == "編輯/刪除紀錄":
 
         action = st.radio("動作", ["編輯", "刪除"])
         if action == "編輯":
-            new_date = st.date_input("日期", datetime.strptime(rows[0][1], "%Y-%m-%d").date())
-            new_start = st.selectbox("上班時間", time_options, index=time_options.index(rows[0][2]))
-            new_end = st.selectbox("下班時間", time_options, index=time_options.index(rows[0][3]))
+            # 重新查詢這筆ID
+            c.execute('SELECT work_date, start_time, end_time FROM records WHERE id=?', (selected_id,))
+            record = c.fetchone()
+
+            new_date = st.date_input("日期", datetime.strptime(record[0], "%Y-%m-%d").date())
+            new_start = st.selectbox("上班時間", time_options, index=time_options.index(record[1]))
+            new_end = st.selectbox("下班時間", time_options, index=time_options.index(record[2]))
+
             if st.button("更新"):
                 c.execute("UPDATE records SET work_date=?, start_time=?, end_time=? WHERE id=?",
-                    (new_date.isoformat(), new_start, new_end, selected_id))
+                  (new_date.isoformat(), new_start, new_end, selected_id))
                 conn.commit()
                 st.toast("更新完成")
                 st.experimental_rerun()
