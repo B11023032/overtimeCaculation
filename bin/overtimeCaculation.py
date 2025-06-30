@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS records (
     work_date TEXT,
     start_time TEXT,
     end_time TEXT,
+    rest_minutes INTEGER,
     total_hours REAL,
     overtime_hours REAL
 )
@@ -94,8 +95,17 @@ if page == "新增上班紀錄":
         if overlap:
             st.warning("此日期已有重疊時間，請確認後再新增。")
         else:
-            c.execute("INSERT INTO records (work_date, start_time, end_time, total_hours, overtime_hours) VALUES (?, ?, ?, ?, ?)",
-                (work_date.isoformat(), start_time.strftime("%H:%M"), end_time.strftime("%H:%M"), total_hours, overtime_hours))
+            c.execute(
+                "INSERT INTO records (work_date, start_time, end_time, total_hours, overtime_hours, rest_minutes) VALUES (?, ?, ?, ?, ?, ?)",
+                (
+                    work_date.isoformat(),
+                    start_time.strftime("%H:%M"),
+                    end_time.strftime("%H:%M"),
+                    total_hours,
+                    overtime_hours,
+                    rest_minutes
+                )
+            )
             conn.commit()
             st.toast("已新增紀錄！")
 
@@ -125,7 +135,7 @@ elif page == "查看每月統計":
             end_month = date(selected_year, selected_month+1, 1)
 
         c.execute('''
-            SELECT work_date, start_time, end_time, total_hours, overtime_hours
+            SELECT work_date, start_time, end_time, total_hours, overtime_hours, rest_minutes
             FROM records
             WHERE work_date >= ? AND work_date < ?
             ORDER BY work_date
@@ -133,7 +143,7 @@ elif page == "查看每月統計":
         rows = c.fetchall()
 
         if rows:
-            df = pd.DataFrame(rows, columns=["日期", "上班時間", "下班時間", "總工時", "加班時數"])
+            df = pd.DataFrame(rows, columns=["日期", "上班時間", "下班時間", "總工時", "加班時數", "休息時間(分鐘)"])
             # 判斷是否休息日
             dates = [r[0] for r in rows]
             dates_dt = [datetime.strptime(d, "%Y-%m-%d").date() for d in dates]
@@ -186,16 +196,18 @@ elif page == "編輯/刪除紀錄":
         action = st.radio("動作", ["編輯", "刪除"])
         if action == "編輯":
             # 重新查詢這筆ID
-            c.execute('SELECT work_date, start_time, end_time FROM records WHERE id=?', (selected_id,))
+            c.execute('SELECT work_date, start_time, end_time, rest_minutes FROM records WHERE id=?', (selected_id,))
             record = c.fetchone()
 
             new_date = st.date_input("日期", datetime.strptime(record[0], "%Y-%m-%d").date())
             new_start = st.selectbox("上班時間", time_options, index=time_options.index(record[1]))
             new_end = st.selectbox("下班時間", time_options, index=time_options.index(record[2]))
+            new_rest = st.selectbox("休息時間", time_options, index=time_options.index(record[3]))
+
 
             if st.button("更新"):
-                c.execute("UPDATE records SET work_date=?, start_time=?, end_time=? WHERE id=?",
-                  (new_date.isoformat(), new_start, new_end, selected_id))
+                c.execute("UPDATE records SET work_date=?, start_time=?, end_time=?, rest_minutes=? WHERE id=?",
+                  (new_date.isoformat(), new_start, new_end, new_rest, selected_id))
                 conn.commit()
                 st.toast("更新完成")
                 st.rerun()
