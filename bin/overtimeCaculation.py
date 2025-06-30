@@ -65,7 +65,7 @@ def is_rest_day(work_date):
 
 # Tab選單
 tabs = st.tabs(["新增/編輯紀錄", "每月統計"])
-page = st.sidebar.radio("選擇頁面", "新增上班紀錄", "查看每月統計")
+page = st.sidebar.radio("選擇頁面", ["新增上班紀錄", "查看每月統計"])
 
 with tabs[0]:
     st.header("新增或編輯上班紀錄")
