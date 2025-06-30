@@ -123,7 +123,6 @@ elif page == "查看每月統計":
     selected_year = st.selectbox("選擇年份", year_options, index=year_options.index(date.today().year))
     selected_month = st.selectbox("選擇月份", month_options, index=month_options.index(date.today().month))
     base_salary_text = st.text_input("輸入底薪 (月薪)")
-
     if st.button("查詢"):
         try:
             base_salary = float(base_salary_text)
@@ -132,13 +131,35 @@ elif page == "查看每月統計":
             st.error("請輸入正確數字")
             st.stop()
 
-        # 查詢資料
+        # 查詢當月範圍
         start_month = date(selected_year, selected_month, 1)
         if selected_month == 12:
             end_month = date(selected_year+1, 1, 1)
         else:
             end_month = date(selected_year, selected_month+1, 1)
 
+        # 先查詢所有紀錄（不篩選月份，用於正確判斷跨月）
+        c.execute('''
+            SELECT work_date
+            FROM records
+            ORDER BY work_date
+        ''')
+        all_date_rows = c.fetchall()
+        all_dates = [datetime.strptime(r[0], "%Y-%m-%d").date() for r in all_date_rows]
+
+        # 建立每個日期的是否休息日映射
+        streak = 0
+        last_date = None
+        date_rest_map = {}
+        for d in all_dates:
+            if last_date and (d - last_date).days == 1:
+                streak += 1
+            else:
+                streak = 1
+            date_rest_map[d] = (streak >= 6)
+            last_date = d
+
+        # 查詢本月資料
         c.execute('''
             SELECT work_date, start_time, end_time, total_hours, overtime_hours, rest_minutes
             FROM records
@@ -149,31 +170,18 @@ elif page == "查看每月統計":
 
         if rows:
             df = pd.DataFrame(rows, columns=["日期", "上班時間", "下班時間", "總工時", "加班時數", "休息時間(分鐘)"])
-            # 判斷是否休息日
-            dates = [r[0] for r in rows]
-            dates_dt = [datetime.strptime(d, "%Y-%m-%d").date() for d in dates]
-            rest_day_flags = []
-
-            # 依日期排序
-            dates_dt.sort()
-            streak = 0
-            last_date = None
-            for d in dates_dt:
-                if last_date and (d - last_date).days == 1:
-                    streak += 1
-                else:
-                    streak = 1
-                is_rest = streak >5
-                rest_day_flags.append(is_rest)
-                last_date = d
 
             total_overtime = 0
             total_pay = 0
             pay_list = []
+            rest_day_flags = []
 
-            for i, r in enumerate(rows):
+            for r in rows:
+                this_date = datetime.strptime(r[0], "%Y-%m-%d").date()
+                is_rest = date_rest_map.get(this_date, False)
+                rest_day_flags.append(is_rest)
+
                 overtime = r[4]
-                is_rest = rest_day_flags[i]
                 pay = calculate_overtime_pay(hourly_rate, overtime, is_rest)
                 pay_list.append(pay)
                 total_overtime += overtime
