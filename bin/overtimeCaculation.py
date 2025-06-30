@@ -198,12 +198,12 @@ elif page == "編輯/刪除紀錄":
                   (new_date.isoformat(), new_start, new_end, selected_id))
                 conn.commit()
                 st.toast("更新完成")
-                st.experimental_rerun()
+                st.rerun()
         else:
             if st.button("刪除"):
                 c.execute("DELETE FROM records WHERE id=?", (selected_id,))
                 conn.commit()
                 st.toast("已刪除")
-                st.experimental_rerun()
+                st.rerun()
     else:
         st.info("無任何紀錄")
