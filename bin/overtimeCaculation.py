@@ -202,7 +202,8 @@ elif page == "編輯/刪除紀錄":
             new_date = st.date_input("日期", datetime.strptime(record[0], "%Y-%m-%d").date())
             new_start = st.selectbox("上班時間", time_options, index=time_options.index(record[1]))
             new_end = st.selectbox("下班時間", time_options, index=time_options.index(record[2]))
-            new_rest = st.selectbox("休息時間", time_options, index=time_options.index(record[3]))
+            rest_minutes_options = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120]
+            new_rest = st.selectbox("休息時間(分鐘)", rest_minutes_options, index=rest_minutes_options.index(record[3]))
 
 
             if st.button("更新"):
