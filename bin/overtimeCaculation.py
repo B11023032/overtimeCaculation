@@ -29,7 +29,7 @@ except sqlite3.OperationalError:
 # 加班費計算
 def calculate_overtime_pay(hourly_rate, overtime_hours, is_rest_day, work_time):
     pay = 0
-    if overtime_hours <= 0:
+    if overtime_hours <= 0 and not is_rest_day:
         return 0
     if is_rest_day:
         if work_time <= 2:
