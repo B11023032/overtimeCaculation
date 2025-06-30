@@ -186,7 +186,7 @@ elif page == "查看每月統計":
                 rest_day_flags.append(is_rest)
 
                 overtime = r[4]
-                pay = calculate_overtime_pay(hourly_rate, overtime, is_rest, r[2] - r[1] - r[7])
+                pay = calculate_overtime_pay(hourly_rate, overtime, is_rest, r[2] - r[1] - r[6])
                 pay_list.append(pay)
                 total_overtime += overtime
                 total_pay += pay
