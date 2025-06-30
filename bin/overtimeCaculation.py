@@ -121,10 +121,13 @@ if show_summary:
         month = st.number_input("月份", min_value=1, max_value=12, value=date.today().month)
         hourly_rate = st.number_input("每小時薪資", min_value=0,value=200)
         
-        start_month = date(year,month,1)
-        end_month = date(year+1,1,1) if month==12 else date(year,month+1,1)
+        start_month = date(year,month,1).strftime("%Y-%m-%d")
+        end_month = (date(year+1,1,1) if month==12 else date(year,month+1,1)).strftime("%Y-%m-%d")
+
         
-        c.execute("SELECT id,work_date,start_time,end_time,total_hours,overtime_hours,is_rest_day FROM records WHERE work_date >=? AND work_date<? ORDER BY work_date",(start_month.isoformat(),end_month.isoformat()))
+        c.execute("""SELECT id, work_date, start_time, end_time, total_hours, overtime_hours, is_rest_day
+        FROM records WHERE work_date >= ? AND work_date < ? ORDER BY work_date
+        """, (start_month, end_month))
         rows = c.fetchall()
         
         if rows:
