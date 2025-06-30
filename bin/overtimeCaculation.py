@@ -172,7 +172,7 @@ elif page == "查看每月統計":
             pay_list = []
 
             for i, r in enumerate(rows):
-                overtime = r[4]
+                overtime = r[5]
                 is_rest = rest_day_flags[i]
                 pay = calculate_overtime_pay(hourly_rate, overtime, is_rest)
                 pay_list.append(pay)
