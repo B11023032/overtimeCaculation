@@ -40,8 +40,8 @@ if page == "新增上班紀錄":
     st.title("新增上班紀錄")
 
     work_date = st.date_input("選擇上班日期", date.today())
-    start_time = st.time_input("上班時間", time(9,0))
-    end_time = st.time_input("下班時間", time(18,0))
+    start_time = st.time_input("上班時間", time(11,0))
+    end_time = st.time_input("下班時間", time(20,0))
 
     # 計算總工時
     dt_start = datetime.combine(work_date, start_time)
