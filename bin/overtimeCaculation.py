@@ -138,14 +138,18 @@ elif page == "查看每月統計":
         else:
             end_month = date(selected_year, selected_month+1, 1)
 
-        # 先查詢所有紀錄（不篩選月份，用於正確判斷跨月）
+        # 查詢所有資料（先依日期排序）
         c.execute('''
-            SELECT work_date
+            SELECT work_date, start_time, end_time, total_hours, overtime_hours, rest_minutes
             FROM records
             ORDER BY work_date
         ''')
-        all_date_rows = c.fetchall()
-        all_dates = [datetime.strptime(r[0], "%Y-%m-%d").date() for r in all_date_rows]
+        all_rows = c.fetchall()
+
+        # 將所有紀錄轉成日期+標記用
+        all_dates = []
+        for r in all_rows:
+            all_dates.append(datetime.strptime(r[0], "%Y-%m-%d").date())
 
         # 建立每個日期的是否休息日映射
         streak = 0
