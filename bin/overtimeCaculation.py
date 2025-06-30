@@ -57,9 +57,9 @@ if page == "新增上班紀錄":
     st.title("新增上班紀錄")
 
     work_date = st.date_input("選擇上班日期", date.today())
-    selected_start = st.selectbox("選擇上班時間", time_options, index=time_options.index("09:00"))
+    selected_start = st.selectbox("選擇上班時間", time_options, index=time_options.index("11:00"))
     start_time = datetime.strptime(selected_start,"%H:%M").time()
-    selected_end = st.selectbox("選擇下班時間", time_options, index=time_options.index("18:00"))
+    selected_end = st.selectbox("選擇下班時間", time_options, index=time_options.index("20:30"))
     end_time = datetime.strptime(selected_end,"%H:%M").time()
 
     # 計算總工時
