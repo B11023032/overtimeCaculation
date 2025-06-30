@@ -212,8 +212,8 @@ elif page == "編輯/刪除紀錄":
 
 
             if st.button("更新"):
-                c.execute("UPDATE records SET work_date=?, start_time=?, end_time=?, rest_minutes=? WHERE id=?",
-                  (new_date.isoformat(), new_start, new_end, new_rest, selected_id))
+                c.execute("UPDATE records SET work_date=?, start_time=?, end_time=?, rest_minutes=?, overtime_hours=? WHERE id=?",
+                  (new_date.isoformat(), new_start, new_end, new_rest, new_end - new_start - timedelta(minutes=new_rest), selected_id))
                 conn.commit()
                 st.toast("更新完成")
                 st.rerun()
