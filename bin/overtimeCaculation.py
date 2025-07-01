@@ -19,27 +19,6 @@ CREATE TABLE IF NOT EXISTS records (
     rest_minutes INTEGER
 )
 ''')
-# 建立 users 表
-c.execute('''
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT,
-        account TEXT UNIQUE,
-        password TEXT
-    )
-''')
-# --- 從 secrets 讀取 Admin 帳密 ---
-ADMIN_USER = st.secrets["admin"]["username"]
-ADMIN_PWD = st.secrets["admin"]["password"]
-
-# --- Session State 初始化 ---
-if "logged_in" not in st.session_state:
-    st.session_state["logged_in"] = False
-if "role" not in st.session_state:
-    st.session_state["role"] = None
-if "account" not in st.session_state:
-    st.session_state["account"] = None
-
 
 conn.commit()
 try:
